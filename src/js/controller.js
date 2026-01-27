@@ -14,7 +14,8 @@ const timeout = function (s) {
 ///////////////////////////////////////
 
 const showRecipe = async function() {
-  const baseUrl = `https://forkify-api.jonas.io/api/v2/recipes`
+  // const baseUrl = `https://forkify-api.jonas.io/api/v2/recipes`
+  const baseUrl = `https://dummyjson.com/recipes`
   try {
     const response = await fetch(baseUrl)
     const data = await response.json()
@@ -24,24 +25,19 @@ const showRecipe = async function() {
     // Without destructuring
     // let recipe = data.data.recipe
     // With destructuring op
-      let {recipe} = data.data.recipe
-
+      let [recipe] = data.recipes
+      
       recipe = {
         id : recipe.id,
-        title : recipe.title,
-        publisher : recipe.publisher,
-        sourceUrl: recipe.source_url,
-        img : recipe.image_url,
-        servings : recipe.servings,
-        cookingTime : recipe.cooking_time,
-        cookingTime : recipe.cooking_time,
+        title : recipe.name,
+        // publisher : recipe.publisher,
+        // sourceUrl: recipe.source_url,
+        img : recipe.image,
+        cookingTime : recipe.prepTimeMinutes,
         ingredients : recipe.ingredients,
       }
-
       console.log(recipe);
-      
-
-  }catch (error){
+        }catch (error){
     alert(error.message)
   }
 }
