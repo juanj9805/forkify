@@ -33,8 +33,13 @@ const spinner = function(parentEl){
 
 
 const showRecipe = async function() {
-  const baseUrl = `https://dummyjson.com/recipes/1`
   try {
+    const id = window.location.hash.slice(1)
+    const baseUrl = `https://dummyjson.com/recipes/${id}`
+    console.log(id);
+
+    if(!id) return;
+    
     // Loading recipe
     spinner(recipeContainer)
     const response = await fetch(baseUrl)
@@ -63,7 +68,6 @@ const showRecipe = async function() {
       //   })
       // });
 
-      console.log(recipe);
       // Rendering recipe
 
       const markup = `
@@ -159,5 +163,5 @@ const showRecipe = async function() {
   }
 }
 
-window.addEventListener('hashchange', showRecipe)
-// window.addEventListener('load', showRecipe)
+window.addEventListener("hashchange", showRecipe)
+window.addEventListener("load", showRecipe)
