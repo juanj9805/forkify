@@ -10,3 +10,15 @@ dist/
 # OS / editor noise
 .DS_Store
 .vscode/
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Parcel cache
+.parcel-cache/
+
+# OS / editor noise
+.DS_Store
+.vscode/
