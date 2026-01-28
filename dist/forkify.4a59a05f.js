@@ -207,7 +207,7 @@
       });
     }
   }
-})({"5DuvQ":[function(require,module,exports,__globalThis) {
+})({"appxp":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -792,158 +792,28 @@ var _esnextWeakSetFromJs = require("core-js/modules/esnext.weak-set.from.js");
 var _esnextWeakSetOfJs = require("core-js/modules/esnext.weak-set.of.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
 var _regeneratorRuntime = require("regenerator-runtime");
-var _iconsSvg = require("url:../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-const recipeContainer = document.querySelector('.recipe');
-const timeout = function(s) {
-    return new Promise(function(_, reject) {
-        setTimeout(function() {
-            reject(new Error(`Request took too long! Timeout after ${s} second`));
-        }, s * 1000);
-    });
-};
-// NEW API URL (instead of the one shown in the video)
-// https://forkify-api.jonas.io
-///////////////////////////////////////
-const spinner = function(parentEl) {
-    const markup = `
-    <div class="spinner">
-      <svg>
-        <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
-      </svg>
-    </div>
-  `;
-    parentEl.innerHTML = "";
-    parentEl.insertAdjacentHTML("afterbegin", markup);
-};
-const showRecipe = async function() {
+var _modelJs = require("./model.js");
+var _recipeViewJs = require("./views/recipeView.js");
+var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
+const controlRecipes = async function() {
     try {
         const id = window.location.hash.slice(1);
-        const baseUrl = `https://dummyjson.com/recipes/${id}`;
-        console.log(id);
         if (!id) return;
+        // spinner(recipeContainer);
+        // recipeView.renderSpinner();
+        (0, _recipeViewJsDefault.default).renderSpinner();
         // Loading recipe
-        spinner(recipeContainer);
-        const response = await fetch(baseUrl);
-        const data = await response.json();
-        if (!response.ok) throw new Error(`${data.message} ${response.status}`);
-        // const recipes = []
-        let recipe = data;
-        recipe = {
-            id: recipe.id,
-            title: recipe.name,
-            img: recipe.image,
-            ingredients: recipe.ingredients,
-            servings: recipe.servings,
-            cookingTime: recipe.prepTimeMinutes
-        };
-        // recipe.forEach(recipe => {
-        //   recipes.push({
-        //   id : recipe.id,
-        //   title : recipe.name,
-        //   img : recipe.image,
-        //   ingredients : recipe.ingredients,  
-        //   servings : recipe.servings,
-        //   cookingTime : recipe.prepTimeMinutes,
-        //   })
-        // });
+        await _modelJs.loadRecipe(id);
         // Rendering recipe
-        const markup = `
-      <figure class="recipe__fig">
-          <img src="${recipe.img}" alt="Tomato" class="recipe__img" />
-          <h1 class="recipe__title">
-            <span>${recipe.title}</span>
-          </h1>
-        </figure>
-
-        <div class="recipe__details">
-          <div class="recipe__info">
-            <svg class="recipe__info-icon">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-clock"></use>
-            </svg>
-            <span class="recipe__info-data recipe__info-data--minutes">${recipe.cookingTime}</span>
-            <span class="recipe__info-text">minutes</span>
-          </div>
-          <div class="recipe__info">
-            <svg class="recipe__info-icon">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-users"></use>
-            </svg>
-            <span class="recipe__info-data recipe__info-data--people">${recipe.servings}</span>
-            <span class="recipe__info-text">servings</span>
-
-            <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--increase-servings">
-                <svg>
-                  <use href="${(0, _iconsSvgDefault.default)}#icon-minus-circle"></use>
-                </svg>
-              </button>
-              <button class="btn--tiny btn--increase-servings">
-                <svg>
-                  <use href="${(0, _iconsSvgDefault.default)}#icon-plus-circle"></use>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="recipe__user-generated">
-            <svg>
-              <use href="${(0, _iconsSvgDefault.default)}#icon-user"></use>
-            </svg>
-          </div>
-          <button class="btn--round">
-            <svg class="">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark-fill"></use>
-            </svg>
-          </button>
-        </div>
-
-        <div class="recipe__ingredients">
-          <h2 class="heading--2">Recipe ingredients</h2>
-          <ul class="recipe__ingredient-list">
-          ${recipe.ingredients.map((ingredient)=>{
-            return `
-            <li class="recipe__ingredient">
-              <svg class="recipe__icon">
-                <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
-              </svg>
-              <div class="recipe__quantity">1000</div>
-              <div class="recipe__description">
-                <span class="recipe__unit">g</span>
-                ${ingredient}
-              </div>
-            </li>
-            `;
-        }).join("")}
-
-        <div class="recipe__directions">
-          <h2 class="heading--2">How to cook it</h2>
-          <p class="recipe__directions-text">
-            This recipe was carefully designed and tested by
-            <span class="recipe__publisher">The Pioneer Woman</span>. Please check out
-            directions at their website.
-          </p>
-          <a
-            class="btn--small recipe__btn"
-            href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
-            target="_blank"
-          >
-            <span>Directions</span>
-            <svg class="search__icon">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
-            </svg>
-          </a>
-        </div>
-      `;
-        recipeContainer.innerHTML = "";
-        recipeContainer.insertAdjacentHTML("afterbegin", markup);
+        (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
     } catch (error) {
-    // alert(error.message)
+        alert(error);
     }
 };
-window.addEventListener("hashchange", showRecipe);
-window.addEventListener("load", showRecipe);
+window.addEventListener('hashchange', controlRecipes);
+window.addEventListener('load', controlRecipes);
 
-},{"core-js/modules/esnext.array.last-index.js":"heX1j","core-js/modules/esnext.array.last-item.js":"gd73s","core-js/modules/esnext.composite-key.js":"cyPSH","core-js/modules/esnext.composite-symbol.js":"hvYja","core-js/modules/esnext.map.delete-all.js":"emugi","core-js/modules/esnext.map.every.js":"e7ps6","core-js/modules/esnext.map.filter.js":"d0o5v","core-js/modules/esnext.map.find.js":"6ZT7N","core-js/modules/esnext.map.find-key.js":"5ArCj","core-js/modules/esnext.map.from.js":"IhzBp","core-js/modules/esnext.map.includes.js":"5iTFq","core-js/modules/esnext.map.key-by.js":"aosTF","core-js/modules/esnext.map.key-of.js":"cL0NY","core-js/modules/esnext.map.map-keys.js":"9YPg4","core-js/modules/esnext.map.map-values.js":"hNjM7","core-js/modules/esnext.map.merge.js":"iYKu2","core-js/modules/esnext.map.of.js":"40OSz","core-js/modules/esnext.map.reduce.js":"2GWf0","core-js/modules/esnext.map.some.js":"dvWMT","core-js/modules/esnext.map.update.js":"cgc1b","core-js/modules/esnext.math.clamp.js":"37JTO","core-js/modules/esnext.math.deg-per-rad.js":"iUfUE","core-js/modules/esnext.math.degrees.js":"66FvZ","core-js/modules/esnext.math.fscale.js":"lDpNf","core-js/modules/esnext.math.iaddh.js":"c4YW7","core-js/modules/esnext.math.imulh.js":"6AkYw","core-js/modules/esnext.math.isubh.js":"k7ab2","core-js/modules/esnext.math.rad-per-deg.js":"8JaUN","core-js/modules/esnext.math.radians.js":"3zsHQ","core-js/modules/esnext.math.scale.js":"7IiLE","core-js/modules/esnext.math.seeded-prng.js":"8qk3B","core-js/modules/esnext.math.signbit.js":"9JYYX","core-js/modules/esnext.math.umulh.js":"kzWcO","core-js/modules/esnext.number.from-string.js":"jThYh","core-js/modules/esnext.observable.js":"aYLNs","core-js/modules/esnext.promise.try.js":"izUpR","core-js/modules/esnext.reflect.define-metadata.js":"azsYD","core-js/modules/esnext.reflect.delete-metadata.js":"1ynAE","core-js/modules/esnext.reflect.get-metadata.js":"ireD4","core-js/modules/esnext.reflect.get-metadata-keys.js":"6H5Yu","core-js/modules/esnext.reflect.get-own-metadata.js":"fKYIt","core-js/modules/esnext.reflect.get-own-metadata-keys.js":"6BwRm","core-js/modules/esnext.reflect.has-metadata.js":"5qnij","core-js/modules/esnext.reflect.has-own-metadata.js":"elxsb","core-js/modules/esnext.reflect.metadata.js":"k9zLU","core-js/modules/esnext.set.add-all.js":"jLtM1","core-js/modules/esnext.set.delete-all.js":"8uQ7T","core-js/modules/esnext.set.difference.js":"8jZOK","core-js/modules/esnext.set.every.js":"jzcwx","core-js/modules/esnext.set.filter.js":"g2PlW","core-js/modules/esnext.set.find.js":"3hj5Z","core-js/modules/esnext.set.from.js":"7SFu2","core-js/modules/esnext.set.intersection.js":"6dAmL","core-js/modules/esnext.set.is-disjoint-from.js":"lHSvu","core-js/modules/esnext.set.is-subset-of.js":"fxKfu","core-js/modules/esnext.set.is-superset-of.js":"d6sbe","core-js/modules/esnext.set.join.js":"jWiap","core-js/modules/esnext.set.map.js":"6elgT","core-js/modules/esnext.set.of.js":"f8vO9","core-js/modules/esnext.set.reduce.js":"j8JzT","core-js/modules/esnext.set.some.js":"9g7g6","core-js/modules/esnext.set.symmetric-difference.js":"ibCuk","core-js/modules/esnext.set.union.js":"gn6qA","core-js/modules/esnext.string.at.js":"77RpS","core-js/modules/esnext.string.code-points.js":"aURiW","core-js/modules/esnext.symbol.dispose.js":"gz6hK","core-js/modules/esnext.symbol.observable.js":"39Led","core-js/modules/esnext.symbol.pattern-match.js":"hCqhl","core-js/modules/esnext.weak-map.delete-all.js":"jUK9z","core-js/modules/esnext.weak-map.from.js":"fzmZB","core-js/modules/esnext.weak-map.of.js":"bs9yE","core-js/modules/esnext.weak-set.add-all.js":"2ondH","core-js/modules/esnext.weak-set.delete-all.js":"3x5PW","core-js/modules/esnext.weak-set.from.js":"jRnX9","core-js/modules/esnext.weak-set.of.js":"9E6IZ","core-js/modules/web.immediate.js":"bzsBv","regenerator-runtime":"f6ot0","url:../img/icons.svg":"fd0vu","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"heX1j":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/esnext.array.last-index.js":"heX1j","core-js/modules/esnext.array.last-item.js":"gd73s","core-js/modules/esnext.composite-key.js":"cyPSH","core-js/modules/esnext.composite-symbol.js":"hvYja","core-js/modules/esnext.map.delete-all.js":"emugi","core-js/modules/esnext.map.every.js":"e7ps6","core-js/modules/esnext.map.filter.js":"d0o5v","core-js/modules/esnext.map.find.js":"6ZT7N","core-js/modules/esnext.map.find-key.js":"5ArCj","core-js/modules/esnext.map.from.js":"IhzBp","core-js/modules/esnext.map.includes.js":"5iTFq","core-js/modules/esnext.map.key-by.js":"aosTF","core-js/modules/esnext.map.key-of.js":"cL0NY","core-js/modules/esnext.map.map-keys.js":"9YPg4","core-js/modules/esnext.map.map-values.js":"hNjM7","core-js/modules/esnext.map.merge.js":"iYKu2","core-js/modules/esnext.map.of.js":"40OSz","core-js/modules/esnext.map.reduce.js":"2GWf0","core-js/modules/esnext.map.some.js":"dvWMT","core-js/modules/esnext.map.update.js":"cgc1b","core-js/modules/esnext.math.clamp.js":"37JTO","core-js/modules/esnext.math.deg-per-rad.js":"iUfUE","core-js/modules/esnext.math.degrees.js":"66FvZ","core-js/modules/esnext.math.fscale.js":"lDpNf","core-js/modules/esnext.math.iaddh.js":"c4YW7","core-js/modules/esnext.math.imulh.js":"6AkYw","core-js/modules/esnext.math.isubh.js":"k7ab2","core-js/modules/esnext.math.rad-per-deg.js":"8JaUN","core-js/modules/esnext.math.radians.js":"3zsHQ","core-js/modules/esnext.math.scale.js":"7IiLE","core-js/modules/esnext.math.seeded-prng.js":"8qk3B","core-js/modules/esnext.math.signbit.js":"9JYYX","core-js/modules/esnext.math.umulh.js":"kzWcO","core-js/modules/esnext.number.from-string.js":"jThYh","core-js/modules/esnext.observable.js":"aYLNs","core-js/modules/esnext.promise.try.js":"izUpR","core-js/modules/esnext.reflect.define-metadata.js":"azsYD","core-js/modules/esnext.reflect.delete-metadata.js":"1ynAE","core-js/modules/esnext.reflect.get-metadata.js":"ireD4","core-js/modules/esnext.reflect.get-metadata-keys.js":"6H5Yu","core-js/modules/esnext.reflect.get-own-metadata.js":"fKYIt","core-js/modules/esnext.reflect.get-own-metadata-keys.js":"6BwRm","core-js/modules/esnext.reflect.has-metadata.js":"5qnij","core-js/modules/esnext.reflect.has-own-metadata.js":"elxsb","core-js/modules/esnext.reflect.metadata.js":"k9zLU","core-js/modules/esnext.set.add-all.js":"jLtM1","core-js/modules/esnext.set.delete-all.js":"8uQ7T","core-js/modules/esnext.set.difference.js":"8jZOK","core-js/modules/esnext.set.every.js":"jzcwx","core-js/modules/esnext.set.filter.js":"g2PlW","core-js/modules/esnext.set.find.js":"3hj5Z","core-js/modules/esnext.set.from.js":"7SFu2","core-js/modules/esnext.set.intersection.js":"6dAmL","core-js/modules/esnext.set.is-disjoint-from.js":"lHSvu","core-js/modules/esnext.set.is-subset-of.js":"fxKfu","core-js/modules/esnext.set.is-superset-of.js":"d6sbe","core-js/modules/esnext.set.join.js":"jWiap","core-js/modules/esnext.set.map.js":"6elgT","core-js/modules/esnext.set.of.js":"f8vO9","core-js/modules/esnext.set.reduce.js":"j8JzT","core-js/modules/esnext.set.some.js":"9g7g6","core-js/modules/esnext.set.symmetric-difference.js":"ibCuk","core-js/modules/esnext.set.union.js":"gn6qA","core-js/modules/esnext.string.at.js":"77RpS","core-js/modules/esnext.string.code-points.js":"aURiW","core-js/modules/esnext.symbol.dispose.js":"gz6hK","core-js/modules/esnext.symbol.observable.js":"39Led","core-js/modules/esnext.symbol.pattern-match.js":"hCqhl","core-js/modules/esnext.weak-map.delete-all.js":"jUK9z","core-js/modules/esnext.weak-map.from.js":"fzmZB","core-js/modules/esnext.weak-map.of.js":"bs9yE","core-js/modules/esnext.weak-set.add-all.js":"2ondH","core-js/modules/esnext.weak-set.delete-all.js":"3x5PW","core-js/modules/esnext.weak-set.from.js":"jRnX9","core-js/modules/esnext.weak-set.of.js":"9E6IZ","core-js/modules/web.immediate.js":"bzsBv","regenerator-runtime":"f6ot0","./model.js":"3QBkH","./views/recipeView.js":"3wx5k","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"heX1j":[function(require,module,exports,__globalThis) {
 'use strict';
 // TODO: Remove from `core-js@4`
 var DESCRIPTORS = require("73b5a71b9881a20f");
@@ -7073,10 +6943,37 @@ try {
     else Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],"fd0vu":[function(require,module,exports,__globalThis) {
-module.exports = module.bundle.resolve("icons.0809ef97.svg") + "?" + Date.now();
+},{}],"3QBkH":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+const state = {
+    recipe: {}
+};
+const loadRecipe = async function(id) {
+    try {
+        const baseUrl = `https://dummyjson.com/recipes/${id}`;
+        const response = await fetch(baseUrl);
+        const data = await response.json();
+        if (!response.ok) throw new Error(`${data.message} ${response.status}`);
+        // const recipes = []
+        let recipe = data;
+        state.recipe = {
+            id: recipe.id,
+            title: recipe.name,
+            img: recipe.image,
+            ingredients: recipe.ingredients,
+            servings: recipe.servings,
+            cookingTime: recipe.prepTimeMinutes
+        };
+        console.log(state.recipe);
+    } catch (err) {
+        alert(err);
+    }
+};
 
-},{}],"jnFvT":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -7106,6 +7003,130 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire7e89", {}, "./", "/")
+},{}],"3wx5k":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:./../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class RecipeView {
+    #parentElement = document.querySelector('.recipe');
+    #data;
+    render(data) {
+        this.#data = data;
+        const markup = this.#generateMarkup();
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+    #clear() {
+        this.#parentElement.innerHTML = '';
+    }
+    renderSpinner = function() {
+        const markup = `
+    <div class="spinner">
+    <svg>
+    <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
+    </svg>
+    </div>
+    `;
+        this.#clear();
+        // this.#parentElement.innerHTML = '';
+        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    };
+    #generateMarkup() {
+        return `
+      <figure class="recipe__fig">
+          <img src="${this.#data.img}" alt="Tomato" class="recipe__img" />
+          <h1 class="recipe__title">
+            <span>${this.#data.title}</span>
+          </h1>
+        </figure>
+
+        <div class="recipe__details">
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="${0, _iconsSvgDefault.default}#icon-clock"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--minutes">${this.#data.cookingTime}</span>
+            <span class="recipe__info-text">minutes</span>
+          </div>
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="${0, _iconsSvgDefault.default}#icon-users"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--people">${this.#data.servings}</span>
+            <span class="recipe__info-text">servings</span>
+
+            <div class="recipe__info-buttons">
+              <button class="btn--tiny btn--increase-servings">
+                <svg>
+                  <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
+                </svg>
+              </button>
+              <button class="btn--tiny btn--increase-servings">
+                <svg>
+                  <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="recipe__user-generated">
+            <svg>
+              <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
+            </svg>
+          </div>
+          <button class="btn--round">
+            <svg class="">
+              <use href="${0, _iconsSvgDefault.default}#icon-bookmark-fill"></use>
+            </svg>
+          </button>
+        </div>
+
+        <div class="recipe__ingredients">
+          <h2 class="heading--2">Recipe ingredients</h2>
+          <ul class="recipe__ingredient-list">
+          ${this.#data.ingredients.map(this.#generateIngredients).join('')}
+
+        <div class="recipe__directions">
+          <h2 class="heading--2">How to cook it</h2>
+          <p class="recipe__directions-text">
+            This this.#data was carefully designed and tested by
+            <span class="recipe__publisher">The Pioneer Woman</span>. Please check out
+            directions at their website.
+          </p>
+          <a
+            class="btn--small recipe__btn"
+            href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
+            target="_blank"
+          >
+            <span>Directions</span>
+            <svg class="search__icon">
+              <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+            </svg>
+          </a>
+        </div>
+      `;
+    }
+    #generateIngredients(ingredient) {
+        return `
+            <li class="recipe__ingredient">
+              <svg class="recipe__icon">
+                <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
+              </svg>
+              <div class="recipe__quantity">1000</div>
+              <div class="recipe__description">
+                <span class="recipe__unit">g</span>
+                ${ingredient}
+              </div>
+            </li>
+            `;
+    }
+}
+exports.default = new RecipeView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","url:./../../img/icons.svg":"fd0vu"}],"fd0vu":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("icons.0809ef97.svg") + "?" + Date.now();
+
+},{}]},["appxp","7dWZ8"], "7dWZ8", "parcelRequire7e89", {}, "./", "/")
 
 //# sourceMappingURL=forkify.4a59a05f.js.map
